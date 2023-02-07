@@ -1,0 +1,30 @@
+version: '3.9' #какая версия compose будет использоваться при сборке
+
+services: # В данном разделе описываем какие контейнеры мы будем запускать
+  web: # Это сервис проекта django - наше приложение и настройки для его запуска
+    restart: always #
+    build: ./ # Здесь мы указываем где лежит dockerfile
+    volumes:
+      - ./:/app
+    container_name: my_blog # Здесь указываем имя контейнера
+    ports: # Осуществляем проброс портов
+      - "8000:8000"
+    command: > # Указываем команды для запуска в dockere
+      sh -c "python manage.py makemigrations && 
+      python manage.py migrate 
+      && python manage.py runserver 0.0.0.0:8000"
+    depends_on: # Указываем что запуска сервиса веб начнётся только после запуска DB
+      - db
+
+  db:
+    platform: linux/amd64
+    image: postgres:15 # Запуск бд 15 версии с репозитория
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+    container_name: my_blog_db # Здесь указываем имя контейнера
+    volumes:
+      - my_blog_postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+volumes:
+  my_blog_postgres_data:
