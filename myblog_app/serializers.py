@@ -73,5 +73,5 @@ class BookAddSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Books
-        exclude = ('likes', 'dislikes', 'user', 'date_publication', 'permit')
+        exclude = ('likes', 'dislikes', 'user', 'date_publication', )
 

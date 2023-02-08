@@ -7,7 +7,7 @@ from .serializers import BookListSerializers, BookDetailSerializers, BookAddSeri
 from .models import Books
 from rest_framework.response import Response
 
-from .service import BooksFilter
+from .service import BooksFilter, MyListBook
 
 
 class ListBook(generics.ListAPIView):
@@ -44,9 +44,11 @@ class AddBookView(generics.CreateAPIView):
         serializer.save(user=self.request.user)
 
 
-class MylistBook(views.APIView):
+class MylistBook(generics.ListAPIView):
+    serializer_class = BookListSerializers
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = MyListBook
 
-    def get(self, request):
-        books = Books.objects.filter(user=self.request.user)
-        serializer = BookListSerializers(books, many=True,)
-        return Response(serializer.data)
+    def get_queryset(self):
+        queryset = Books.objects.filter(user=self.request.user)
+        return queryset

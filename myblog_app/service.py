@@ -22,3 +22,8 @@ class BooksFilter(filters.FilterSet):
         fields = ['genrys', 'category', 'title', 'date_publication', 'authors', 'publisher', 'num_pages']
 
 
+class MyListBook(filters.FilterSet):
+    permit = filters.BooleanFilter(field_name='permit')
+
+    class Meta:
+        fields = ('permit', )
