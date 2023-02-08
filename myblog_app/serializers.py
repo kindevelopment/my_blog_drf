@@ -46,19 +46,19 @@ class PublisherSeriazlizers(serializers.ModelSerializer):
 
 
 class BookListSerializers(serializers.ModelSerializer):
-    author = AuthorSerializers(many=True)
+    authors = AuthorSerializers(many=True)
     category = CategorySerializers()
-    genry = GenrySerializers(many=True)
+    genrys = GenrySerializers(many=True)
 
     class Meta:
         model = Books
-        fields = ('poster', 'title', 'author', 'category', 'genry')
+        fields = ('poster', 'title', 'authors', 'category', 'genrys')
 
 
 class BookDetailSerializers(serializers.ModelSerializer):
-    author = AuthorSerializers(many=True)
+    authors = AuthorSerializers(many=True)
     category = CategorySerializers()
-    genry = GenrySerializers(many=True)
+    genrys = GenrySerializers(many=True)
     user = UserSerializers()
     publisher = PublisherSeriazlizers()
     likes = LikeSerializers(many=True)
@@ -74,3 +74,4 @@ class BookAddSerializers(serializers.ModelSerializer):
     class Meta:
         model = Books
         exclude = ('likes', 'dislikes', 'user', 'date_publication', 'permit')
+

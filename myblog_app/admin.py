@@ -6,11 +6,12 @@ from .models import Books, Author, Publisher, Category, Genry
 
 @admin.register(Books)
 class BooksAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'get_image', 'category',)
+    list_display = ('id', 'title', 'get_image', 'category', 'permit', )
     list_display_links = ('title', )
-    list_filter = ('category', 'author', 'publisher', 'genry')
+    list_filter = ('category', 'authors', 'publisher', 'genrys')
+    list_editable = ('permit', )
     search_fields = ('title',)
-    readonly_fields = ('get_image', 'date_publication', )
+    readonly_fields = ('get_image', )
     fieldsets = (
         (None, {
             'fields': (('title',), 'file', ('poster', 'get_image'))
@@ -19,10 +20,10 @@ class BooksAdmin(admin.ModelAdmin):
             'fields': ('description', )
         }),
         (None, {
-            'fields': (('author', 'genry', ), )
+            'fields': (('authors', 'genrys', ), )
         }),
         (None, {
-            'fields': (('category', 'publisher', ), )
+            'fields': (('category', 'publisher', 'user',), )
         }),
         (None, {
             'fields': (('date_publication', 'num_pages',), )
@@ -38,18 +39,22 @@ class BooksAdmin(admin.ModelAdmin):
 @admin.register(Author)
 class BooksAdmin(admin.ModelAdmin):
     list_display = ('id', 'title')
+    list_display_links = ('title', )
 
 
 @admin.register(Publisher)
 class BooksAdmin(admin.ModelAdmin):
     list_display = ('id', 'title')
+    list_display_links = ('title', )
 
 
 @admin.register(Category)
 class BooksAdmin(admin.ModelAdmin):
     list_display = ('id', 'title')
+    list_display_links = ('title',)
 
 
 @admin.register(Genry)
 class BooksAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', )
+    list_display_links = ('title', )

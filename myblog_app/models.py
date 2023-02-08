@@ -1,3 +1,6 @@
+import uuid
+from datetime import date
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -56,14 +59,15 @@ class Books(models.Model):
     poster = models.ImageField('Постер', upload_to='poster/')
     file = models.FileField('Файл книги', upload_to='filebooks/')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='books', verbose_name='Пользователь')
-    author = models.ManyToManyField(Author, verbose_name='Автор')
+    authors = models.ManyToManyField(Author, verbose_name='Автор')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='books_category', verbose_name='Категория')
-    genry = models.ManyToManyField(Genry, related_name='books_genry', verbose_name='Жанр')
+    genrys = models.ManyToManyField(Genry, related_name='books_genry', verbose_name='Жанр')
     publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE, related_name='books_publisher', verbose_name='Издатель')
-    date_publication = models.DateField('Дата публикации', auto_now_add=True)
+    date_publication = models.DateField('Дата издания книги', default=date.today)
+    date_created_post = models.DateField('Дата публикации', auto_now_add=True, null=True)
     num_pages = models.PositiveIntegerField('Кол-во страниц', default=0)
-    likes = models.ManyToManyField(User, related_name='likes', blank=True, verbose_name='Нравится')
-    dislikes = models.ManyToManyField(User, related_name='dislikes', blank=True, verbose_name='Не нравится')
+    likes = models.ManyToManyField(User, related_name='likes', default=0, verbose_name='Нравится')
+    dislikes = models.ManyToManyField(User, related_name='dislikes', default=0, verbose_name='Не нравится')
     permit = models.BooleanField(default=False)
 
     def __str__(self):
