@@ -1,6 +1,11 @@
+import os.path
+
+from django.http import FileResponse, Http404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import views, generics
+from rest_framework import views, generics, viewsets
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.decorators import action
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 
 from .serializers import BookListSerializers, BookDetailSerializers, BookAddSerializers
@@ -52,3 +57,41 @@ class MylistBook(generics.ListAPIView):
     def get_queryset(self):
         queryset = Books.objects.filter(user=self.request.user)
         return queryset
+
+
+class LikeOrDislike(viewsets.ModelViewSet):
+    queryset = Books.objects.all()
+    serializer_class = BookDetailSerializers
+
+    @action(detail=True, methods=['put'])
+    def set_like(self, request, pk):
+        book = self.get_object()
+        if self.request.user in book.dislikes.all():
+            book.dislikes.remove(self.request.user)
+        if self.request.user in book.likes.all():
+            book.likes.remove(self.request.user)
+        else:
+            book.likes.add(self.request.user)
+        return Response(status=201)
+
+    @action(detail=True, methods=['put'])
+    def set_dislike(self, request, pk):
+        book = self.get_object()
+        if self.request.user in book.likes.all():
+            book.likes.remove(self.request.user)
+        if self.request.user in book.dislikes.all():
+            book.dislikes.remove(self.request.user)
+        else:
+            book.dislikes.add(self.request.user)
+        return Response(status=201)
+
+
+class DownloadBookView(views.APIView):
+
+    def get(self, request, pk):
+        book = get_object_or_404(Books, id=pk)
+        if os.path.exists(book.file.path):
+            return FileResponse(open(book.file.path, 'rb'), filename=book.file.name, as_attachment=True)
+        else:
+            return Http404
+

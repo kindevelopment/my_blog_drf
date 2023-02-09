@@ -26,7 +26,7 @@ class BooksAdmin(admin.ModelAdmin):
             'fields': (('category', 'publisher', 'user',), )
         }),
         (None, {
-            'fields': (('date_publication', 'num_pages',), )
+            'fields': (('date_publication', 'num_pages',), 'likes', 'dislikes')
         }),
     )
 

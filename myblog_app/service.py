@@ -27,3 +27,4 @@ class MyListBook(filters.FilterSet):
 
     class Meta:
         fields = ('permit', )
+
