@@ -18,7 +18,6 @@ from .service import BooksFilter, MyListBook
 class ListBook(generics.ListAPIView):
     queryset = Books.objects.filter(permit=True)
     serializer_class = BookListSerializers
-    permission_classes = (IsAuthenticated, )
     filter_backends = (DjangoFilterBackend, )
     filterset_class = BooksFilter
     # authentication_classes = (TokenAuthentication, )
@@ -51,16 +50,16 @@ class AddBookView(generics.CreateAPIView):
 
 class MylistBook(generics.ListAPIView):
     serializer_class = BookListSerializers
+    permission_classes = (IsAuthenticated,)
     filter_backends = (DjangoFilterBackend,)
     filterset_class = MyListBook
 
     def get_queryset(self):
-        queryset = Books.objects.filter(user=self.request.user)
-        return queryset
+        return Books.objects.filter(user=self.request.user)
 
 
 class LikeOrDislike(viewsets.ModelViewSet):
-    queryset = Books.objects.all()
+    queryset = Books.objects.prefetch_related('likes').all()
     serializer_class = BookDetailSerializers
 
     @action(detail=True, methods=['put'])

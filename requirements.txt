@@ -10,6 +10,7 @@ dj-database-url==1.2.0
 Django==4.1.6
 django-filter==22.1
 django-templated-mail==1.1.1
+django_debug_toolbar==3.8.1
 djangorestframework==3.14.0
 djangorestframework-simplejwt==4.8.0
 djoser==2.1.0
